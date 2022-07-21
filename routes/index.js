@@ -6,4 +6,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+//Route for creating an account
+router.post('/createaccount', (req, res, next) => {
+  
+})
+
 module.exports = router;
