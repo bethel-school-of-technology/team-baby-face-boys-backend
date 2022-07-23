@@ -6,6 +6,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+//route for getting all users
+router.get('/users', (req, res, nexrt) => {
+  User.findAll().then(userList => {
+    res.json(userList)
+  })
+})
+
 //Route for creating an account
 router.post('/createaccount', (req, res, next) => {
   User.create({
