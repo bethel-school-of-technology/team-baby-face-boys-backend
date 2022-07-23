@@ -27,4 +27,19 @@ router.post('/createaccount', (req, res, next) => {
     res.status(400);
   })
 })
+
+//route for logging in
+router.post('/login', async (req,res,next) => {
+  User.findOne({
+    where: {
+      gamerID: req.body.gamerID,
+      password: req.body.password
+    }
+  }).then(user => {
+    res.json({
+      gamerID: user.gamerID
+    })
+  })
+})
+
 module.exports = router;
