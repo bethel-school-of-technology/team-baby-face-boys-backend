@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-models.sequelize.sync({ alter:true }).then(() => {
+models.sequelize.sync({ }).then(() => {
     console.log('DB synch')
 });
 
