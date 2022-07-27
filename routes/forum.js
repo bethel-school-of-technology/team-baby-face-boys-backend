@@ -21,4 +21,10 @@ router.post('/', (req,res,next) => {
     })
 })
 
+//route to GET users for user list
+router.get('/users', (req, res, next) => {
+    User.findAll().then(userList => {
+      res.json(userList)
+    })
+  })
   module.exports = router;
