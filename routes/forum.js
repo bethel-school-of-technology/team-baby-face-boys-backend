@@ -12,12 +12,25 @@ router.get('/', (req, res, next) => {
 //create a post
 router.post('/', (req,res,next) => {
     Post.create({
+        postId: req.body.postId,
         postTitle: req.body.postTitle,
         postBody: req.body.postBody
     }).then(newPost => {
         res.json(newPost)
     }).catch(() => {
         res.status(400)
+    })
+})
+
+//delete a post
+router.delete('/:id', (req, res, next) => {
+    const postId = parseInt(req.params.id);
+    Post.destroy({
+        where: {
+            postId: postId
+        }
+    }).then(() => {
+        res.status(204).send('deleted')
     })
 })
 
