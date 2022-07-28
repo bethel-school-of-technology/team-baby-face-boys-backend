@@ -9,6 +9,24 @@ router.get('/', (req, res, next) => {
     })
 })
 
+//get post by id
+router.put('/:id', (req, res, next) => {
+    const postId = parseInt(req.params.id);
+    Post.findOne({
+        where: {
+            postId: postId
+        }
+    }).then(post => {
+        if (post){
+            res.json(post)
+        } else {
+            res.status(400).send()
+        }
+    }), err => {
+        res.status(500).send(err)
+    }
+})
+
 //create a post
 router.post('/', (req,res,next) => {
     Post.create({
@@ -31,6 +49,26 @@ router.delete('/:id', (req, res, next) => {
         }
     }).then(() => {
         res.status(204).send('deleted')
+    })
+})
+
+//edit post
+router.put('/:id', (req, res, next) => {
+    const postId = parseInt(req.params.id);
+    if(!postId || postId < 0){
+        res.status(400).send()
+    }
+    Post.update({
+        postTitle: req.body.postTitle,
+        postBody: req.body.postBody
+    }, {
+        where: {
+            postId: postId
+        }
+    }).then(() => {
+        res.status(204).send()
+    }).catch(() => {
+        res.status(400).send()
     })
 })
 
