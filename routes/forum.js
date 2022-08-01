@@ -30,7 +30,6 @@ router.put('/:id', (req, res, next) => {
 //create a post
 router.post('/', (req,res,next) => {
     Post.create({
-        postId: req.body.postId,
         postTitle: req.body.postTitle,
         postBody: req.body.postBody
     }).then(newPost => {
@@ -63,7 +62,7 @@ router.put('/:id', (req, res, next) => {
         postBody: req.body.postBody
     }, {
         where: {
-            postId: postId
+            id: id
         }
     }).then(() => {
         res.status(204).send()
