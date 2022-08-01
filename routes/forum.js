@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 const { User, Post } = require('../models');
 
-/* GET all posts. */
+// GET all posts. *
 router.get('/', (req, res, next) => {
     Post.findAll().then(postList => {
         res.json(postList)
     })
 })
 
-//get post by id
+//get post by id *
 router.get('/:id', (req, res, next) => {
     const id = parseInt(req.params.id);
     Post.findOne({
@@ -27,7 +27,7 @@ router.get('/:id', (req, res, next) => {
     }
 })
 
-//create a post
+//create a post *
 router.post('/', (req,res,next) => {
     Post.create({
         postTitle: req.body.postTitle,
@@ -44,14 +44,14 @@ router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id);
     Post.destroy({
         where: {
-            id: idd
+            id: id
         }
     }).then(() => {
         res.status(204).send('deleted')
     })
 })
 
-//edit post
+//edit post *
 router.put('/:id', (req, res, next) => {
     const id = parseInt(req.params.id);
     if(!id || id < 0){
@@ -71,7 +71,7 @@ router.put('/:id', (req, res, next) => {
     })
 })
 
-//route to GET users for user list
+//route to GET users for user list *
 router.get('/users', (req, res, next) => {
     User.findAll().then(userList => {
       res.json(userList)
