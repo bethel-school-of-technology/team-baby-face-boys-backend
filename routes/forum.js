@@ -10,11 +10,11 @@ router.get('/', (req, res, next) => {
 })
 
 //get post by id
-router.put('/:id', (req, res, next) => {
-    const postId = parseInt(req.params.id);
+router.get('/:id', (req, res, next) => {
+    const id = parseInt(req.params.id);
     Post.findOne({
         where: {
-            postId: postId
+            id: id
         }
     }).then(post => {
         if (post){
@@ -41,10 +41,10 @@ router.post('/', (req,res,next) => {
 
 //delete a post
 router.delete('/:id', (req, res, next) => {
-    const postId = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
     Post.destroy({
         where: {
-            postId: postId
+            id: idd
         }
     }).then(() => {
         res.status(204).send('deleted')
@@ -53,8 +53,8 @@ router.delete('/:id', (req, res, next) => {
 
 //edit post
 router.put('/:id', (req, res, next) => {
-    const postId = parseInt(req.params.id);
-    if(!postId || postId < 0){
+    const id = parseInt(req.params.id);
+    if(!id || id < 0){
         res.status(400).send()
     }
     Post.update({
