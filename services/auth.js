@@ -5,8 +5,8 @@ var authService = {
     signUser: user => {
         const token = jwt.sign(
             {
-                gamerID: req.body.gamerID,
-                password: req.body.password
+                gamerID: models.User.gamerID,
+                password: models.User.password
             },
                 'secretkey',
             {

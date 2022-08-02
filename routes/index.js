@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const { User } = require('../models');
+var authService = require('../services/auth')
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -36,9 +38,18 @@ router.post('/login', async (req,res,next) => {
       password: req.body.password
     }
   }).then(user => {
-    res.json({
-      gamerID: user.gamerID
-    })
+    if(!user){
+      res.status(401).json({
+        message: 'User not found'
+      })
+    }
+    if(user){
+      let token = authService.signUser(user);
+      res.cookie('jwt', token);
+      res.send('login good')
+    } else {
+      res.status(401).send('Invalid Password')
+    }
   })
 })
 
