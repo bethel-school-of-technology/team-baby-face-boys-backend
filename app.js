@@ -6,6 +6,7 @@ var models = require('./models');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var forumRouter = require('./routes/forum');
 
 var app = express();
 
@@ -15,11 +16,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-models.sequelize.sync({ }).then(() => {
+models.sequelize.sync({ alter: true }).then(() => {
     console.log('DB synch')
 });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/forum', forumRouter);
 
 module.exports = app;

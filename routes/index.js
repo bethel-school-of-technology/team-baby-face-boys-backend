@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 //route for getting all users
-router.get('/users', (req, res, nexrt) => {
+router.get('/users', (req, res, next) => {
   User.findAll().then(userList => {
     res.json(userList)
   })

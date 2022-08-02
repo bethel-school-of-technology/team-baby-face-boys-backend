@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Post.init({
-    postId: {
-      primaryKey: true,
-      type: DataTypes.INTEGER
-    },
     postTitle: {
       type: DataTypes.STRING,
       allowNull: false

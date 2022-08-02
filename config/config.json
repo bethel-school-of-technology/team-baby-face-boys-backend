@@ -4,20 +4,23 @@
     "password": "Isaiah4031",
     "database": "baby-face-boys-backend",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timestamps": false
   },
   "test": {
     "username": "root",
     "password": "Isaiah4031",
     "database": "baby-face-boys-backend",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timestamps": false
   },
   "production": {
     "username": "root",
     "password": "Isaiah4031",
     "database": "baby-face-boys-backend",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timestamps": false
   }
 }
