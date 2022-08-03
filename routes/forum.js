@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { User, Post } = require('../models');
+var authService = require('../services/auth')
 
 // GET all posts. *
 router.get('/', (req, res, next) => {
@@ -28,10 +29,27 @@ router.get('/:id', (req, res, next) => {
 })
 
 //create a post *
-router.post('/', (req,res,next) => {
+router.post('/', async (req,res,next) => {
+    //get token from req
+    const header = req.headers.authorization;
+    if(!header){
+        res.status(403).send();
+        return
+    }
+
+    const token = header.split(' ')[1];
+
+    //validate token / get user
+    const user = await authService.verifyUser(token);
+    if(!user){
+        res.status(403).send();
+        return;
+    }
+    //create post
     Post.create({
         postTitle: req.body.postTitle,
-        postBody: req.body.postBody
+        postBody: req.body.postBody,
+        UserId: user.id
     }).then(newPost => {
         res.json(newPost)
     }).catch(() => {
