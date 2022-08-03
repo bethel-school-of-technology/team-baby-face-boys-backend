@@ -4,25 +4,7 @@ var cookieParser = require('cookie-parser');
 const { User, Post } = require('../models');
 var authService = require('../services/auth')
 
-//GET user by id *
-// router.get('/:id', (req, res, next) => {
-//     const id = parseInt(req.params.id);
-//     User.findOne({
-//         where: {
-//             id: id
-//         }
-//     }).then(user => {
-//         if (user){
-//             res.json({
-//                 gamerID: user.gamerID
-//             })
-//         } else {
-//             res.status(400).send()
-//         }
-//     }), err => {
-//         res.status(500).send(err)
-//     }
-// })
+//GET user secure routing *
 router.get('/', (req, res , next) => {
     let token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
@@ -30,6 +12,8 @@ router.get('/', (req, res , next) => {
             res.json({
                 gamerID: user.gamerID
             })
+        } else {
+            res.status(401).send('Please log in to see your profile')
         }
     })
 
