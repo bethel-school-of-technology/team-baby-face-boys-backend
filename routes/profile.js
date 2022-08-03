@@ -1,26 +1,40 @@
 var express = require('express');
 var router = express.Router();
+var cookieParser = require('cookie-parser');
 const { User, Post } = require('../models');
+var authService = require('../services/auth')
 
 //GET user by id *
-router.get('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    User.findOne({
-        where: {
-            id: id
-        }
-    }).then(user => {
-        if (user){
+// router.get('/:id', (req, res, next) => {
+//     const id = parseInt(req.params.id);
+//     User.findOne({
+//         where: {
+//             id: id
+//         }
+//     }).then(user => {
+//         if (user){
+//             res.json({
+//                 gamerID: user.gamerID
+//             })
+//         } else {
+//             res.status(400).send()
+//         }
+//     }), err => {
+//         res.status(500).send(err)
+//     }
+// })
+router.get('/', (req, res , next) => {
+    let token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        if(user){
             res.json({
                 gamerID: user.gamerID
             })
-        } else {
-            res.status(400).send()
         }
-    }), err => {
-        res.status(500).send(err)
-    }
+    })
+
 })
+
 
 //POST to post to forum
 router.post('/:id', (req, res, next) => {
