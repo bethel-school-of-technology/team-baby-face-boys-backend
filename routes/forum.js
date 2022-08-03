@@ -30,21 +30,14 @@ router.get('/:id', (req, res, next) => {
 
 //create a post *
 router.post('/', async (req,res,next) => {
-    //get token from req
-    const header = req.headers.authorization;
-    if(!header){
+    let token = req.cookies.jwt
+
+    const user = await authService.verifyUser(token);
+    if(!user){
         res.status(403).send();
         return
     }
 
-    const token = header.split(' ')[1];
-
-    //validate token / get user
-    const user = await authService.verifyUser(token);
-    if(!user){
-        res.status(403).send();
-        return;
-    }
     //create post
     Post.create({
         postTitle: req.body.postTitle,
