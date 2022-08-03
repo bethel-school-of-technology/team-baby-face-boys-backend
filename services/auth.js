@@ -18,7 +18,6 @@ var authService = {
     verifyUser: token => {
         try {
             let decoded = jwt.verify(token, 'secretkey');
-            console.log('decoded',decoded)
             return User.findByPk(decoded.id);
         } catch(err) {
             console.log(err);
