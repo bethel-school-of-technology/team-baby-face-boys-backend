@@ -23,6 +23,8 @@ router.get('/', (req, res, next) => {
                     postBody: post.postBody
                 })
             })
+        } else {
+            res.status(401).send('You most be logged in')
         }
     })
 })
@@ -52,24 +54,27 @@ router.post('/', async (req,res,next) => {
 
 
 
-//PUT for latest post //need to add JWT
-// router.put('/:id', (req, res, next) => {
-//     const id = parseInt(req.params.id);
-//     if(!id || id < 0){
-//         res.status(400).send()
-//     }
-//     Post.update({
-//         postTitle: req.body.postTitle,
-//         postBody: req.body.postBody
-//     }, {
-//         where: {
-//             id: id
-//         }
-//     }).then(() => {
-//         res.status(204).send()
-//     }).catch(() => {
-//         res.status(400).send()
-//     })
-// })
+//PUT for latest post *
+router.put('/', (req, res, next) => {
+    let token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        if(user){
+            Post.update(
+                {
+                    postTitle: req.body.postTitle,
+                    postBody: req.body.postBody
+                }, {
+                    where: {
+                        UserId: user.id
+                    }
+                }
+            ) 
+        }
+    }).then(post => {
+        res.json(post);
+    }).catch(() => {
+        res.status(400).send()
+    })
+})
 
 module.exports = router;
