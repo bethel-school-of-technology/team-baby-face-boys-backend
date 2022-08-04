@@ -1,32 +1,50 @@
 var express = require('express');
 var router = express.Router();
 const { User, Post } = require('../models');
+var authService = require('../services/auth')
 
-//GET user by id *
-router.get('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    User.findOne({
-        where: {
-            id: id
-        }
-    }).then(user => {
-        if (user){
-            res.json({
-                gamerID: user.gamerID
+//GET user secure routing. returns profile and most recent post*
+router.get('/', (req, res, next) => {
+    let token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        if(user){
+            Post.findOne({
+                where: {
+                    UserId: user.id
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                attributes: ['id','postBody', 'postTitle', 'createdAt', 'updatedAt', 'UserId']
+            }).then(post => {
+                res.json({
+                    gamerID: user.gamerID,
+                    postTitle: post.postTitle,
+                    postBody: post.postBody
+                })
             })
         } else {
-            res.status(400).send()
+            res.status(401).send('You most be logged in')
         }
-    }), err => {
-        res.status(500).send(err)
-    }
+    })
 })
 
+
 //POST to post to forum
-router.post('/:id', (req, res, next) => {
+router.post('/', async (req,res,next) => {
+    let token = req.cookies.jwt
+
+    const user = await authService.verifyUser(token);
+    if(!user){
+        res.status(403).send();
+        return
+    }
+
+    //create post
     Post.create({
         postTitle: req.body.postTitle,
-        postBody: req.body.postBody
+        postBody: req.body.postBody,
+        UserId: user.id
     }).then(newPost => {
         res.json(newPost)
     }).catch(() => {
@@ -34,40 +52,29 @@ router.post('/:id', (req, res, next) => {
     })
 })
 
-//GET for latest post //need to add JWT for this to work
-// router.get('/:id', (req, res, next) => {
-//     const latestPost = parseInt(req.params.id);
-
-//     Post.findOne({
-//         where: {
-//             id: latestPost
-//         }
-//     }).then(latestPost => {
-//         res.json(latestPost)
-//     }).catch(() => {
-//         res.status(400)
-//     })
-// })
 
 
-//PUT for latest post //need to add JWT
-// router.put('/:id', (req, res, next) => {
-//     const id = parseInt(req.params.id);
-//     if(!id || id < 0){
-//         res.status(400).send()
-//     }
-//     Post.update({
-//         postTitle: req.body.postTitle,
-//         postBody: req.body.postBody
-//     }, {
-//         where: {
-//             id: id
-//         }
-//     }).then(() => {
-//         res.status(204).send()
-//     }).catch(() => {
-//         res.status(400).send()
-//     })
-// })
+//PUT for latest post *
+router.put('/', (req, res, next) => {
+    let token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        if(user){
+            Post.update(
+                {
+                    postTitle: req.body.postTitle,
+                    postBody: req.body.postBody
+                }, {
+                    where: {
+                        UserId: user.id
+                    }
+                }
+            ) 
+        }
+    }).then(post => {
+        res.json(post);
+    }).catch(() => {
+        res.status(400).send()
+    })
+})
 
 module.exports = router;
