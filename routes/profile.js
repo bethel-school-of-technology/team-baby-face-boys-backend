@@ -46,7 +46,10 @@ router.post('/', async (req,res,next) => {
         postBody: req.body.postBody,
         UserId: user.id
     }).then(newPost => {
-        res.json(newPost)
+        res.json({
+            postTitle: newPost.postTitle,
+            postBody: newPost.postBody
+        })
     }).catch(() => {
         res.status(400)
     })
