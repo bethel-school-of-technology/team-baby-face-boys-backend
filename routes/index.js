@@ -21,10 +21,14 @@ router.post('/createaccount', (req, res, next) => {
     fullName: req.body.fullName,
     gamerID: req.body.gamerID,
     email: req.body.email,
-    password: req.body.password,
+    password: authService.hashPassword(req.body.password),
     DOB: req.body.DOB
   }).then(newUser => {
-    res.json(newUser)
+    res.json({
+      fullName: newUser.fullName,
+      gamerID: newUser.gamerID,
+      email: newUser.email
+    })
   }).catch(() => {
     res.status(400);
   })
@@ -34,23 +38,22 @@ router.post('/createaccount', (req, res, next) => {
 router.post('/login', async (req,res,next) => {
   User.findOne({
     where: {
-      gamerID: req.body.gamerID,
-      password: req.body.password
+      gamerID: req.body.gamerID
     }
   }).then(user => {
     if(!user){
       res.status(401).json({
         message: 'User not found'
       })
-    }
-    if(user){
-      let token = authService.signUser(user);
-      res.cookie('jwt', token);
-      res.send({
-        token
-      })
     } else {
-      res.status(401).send('Invalid Password')
+      let passwordMatch = authService.comparePasswords(req.body.password, user.password);
+      if(passwordMatch){
+        let token = authService.signUser(user);
+        res.cookie('jwt', token);
+        res.send(token);
+      } else {
+        res.status(400).send('Invalid password');
+      }
     }
   })
 })
