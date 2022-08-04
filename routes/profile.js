@@ -29,10 +29,20 @@ router.get('/', (req, res, next) => {
 
 
 //POST to post to forum
-router.post('/:id', (req, res, next) => {
+router.post('/', async (req,res,next) => {
+    let token = req.cookies.jwt
+
+    const user = await authService.verifyUser(token);
+    if(!user){
+        res.status(403).send();
+        return
+    }
+
+    //create post
     Post.create({
         postTitle: req.body.postTitle,
-        postBody: req.body.postBody
+        postBody: req.body.postBody,
+        UserId: user.id
     }).then(newPost => {
         res.json(newPost)
     }).catch(() => {
@@ -40,20 +50,6 @@ router.post('/:id', (req, res, next) => {
     })
 })
 
-//GET for latest post //need to add JWT for this to work
-// router.get('/:id', (req, res, next) => {
-//     const latestPost = parseInt(req.params.id);
-
-//     Post.findOne({
-//         where: {
-//             id: latestPost
-//         }
-//     }).then(latestPost => {
-//         res.json(latestPost)
-//     }).catch(() => {
-//         res.status(400)
-//     })
-// })
 
 
 //PUT for latest post //need to add JWT

@@ -11,22 +11,22 @@ router.get('/', (req, res, next) => {
 })
 
 //get post by id *
-router.get('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    Post.findOne({
-        where: {
-            id: id
-        }
-    }).then(post => {
-        if (post){
-            res.json(post)
-        } else {
-            res.status(400).send()
-        }
-    }), err => {
-        res.status(500).send(err)
-    }
-})
+// router.get('/:id', (req, res, next) => {
+//     const id = parseInt(req.params.id);
+//     Post.findOne({
+//         where: {
+//             id: id
+//         }
+//     }).then(post => {
+//         if (post){
+//             res.json(post)
+//         } else {
+//             res.status(400).send()
+//         }
+//     }), err => {
+//         res.status(500).send(err)
+//     }
+// })
 
 //create a post *
 router.post('/', async (req,res,next) => {
