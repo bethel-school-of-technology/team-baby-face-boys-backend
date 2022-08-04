@@ -1,32 +1,30 @@
 var express = require('express');
 var router = express.Router();
-var cookieParser = require('cookie-parser');
 const { User, Post } = require('../models');
 var authService = require('../services/auth')
 
-//GET user secure routing *
-router.get('/', (req, res , next) => {
+//GET user secure routing. returns profile and most recent post*
+router.get('/', (req, res, next) => {
     let token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
             Post.findOne({
-                where: 
-                //add where clause for sequelize
-                {
-
-                }
+                where: {
+                    UserId: user.id
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                attributes: ['id','postBody', 'postTitle', 'createdAt', 'updatedAt', 'UserId']
             }).then(post => {
                 res.json({
+                    gamerID: user.gamerID,
                     postTitle: post.postTitle,
                     postBody: post.postBody
                 })
             })
-           
-        } else {
-            res.status(401).send('Please log in to see your profile')
         }
     })
-
 })
 
 
