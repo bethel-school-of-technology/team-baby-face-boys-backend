@@ -9,9 +9,19 @@ router.get('/', (req, res , next) => {
     let token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
-            res.json({
-                gamerID: user.gamerID
+            Post.findOne({
+                where: 
+                //add where clause for sequelize
+                {
+
+                }
+            }).then(post => {
+                res.json({
+                    postTitle: post.postTitle,
+                    postBody: post.postBody
+                })
             })
+           
         } else {
             res.status(401).send('Please log in to see your profile')
         }
