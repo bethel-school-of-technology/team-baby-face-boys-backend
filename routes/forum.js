@@ -54,21 +54,6 @@ router.post('/', async (req,res,next) => {
 })
 
 //delete a post
-router.delete('/', (req, res, next) => {
-    let token = req.cookies.jwt;
-    authService.verifyUser(token).then(user => {
-        if(user){
-            Post.destroy({
-                where: {
-                    id: id
-                }
-            })
-        } else {
-            res.status(401).send('You may only delete your posts')
-        }
-    })
-})
-
 router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id);
     Post.destroy({

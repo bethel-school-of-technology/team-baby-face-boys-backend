@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     DOB: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false
     },
   }, {
