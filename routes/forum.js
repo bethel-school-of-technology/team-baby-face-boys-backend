@@ -29,11 +29,11 @@ router.get('/', (req, res, next) => {
 // })
 
 //create a post *
-router.post('/', async (req,res,next) => {
+router.post('/', async (req, res, next) => {
     let token = req.cookies.jwt
 
     const user = await authService.verifyUser(token);
-    if(!user){
+    if (!user) {
         res.status(403).send();
         return
     }
@@ -55,40 +55,56 @@ router.post('/', async (req,res,next) => {
 
 //delete a post
 router.delete('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    Post.destroy({
-        where: {
-            id: id
+    const id = req.params.id;
+    const token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        if (user) {
+            Post.destroy({
+                where: {
+                    id: id
+                }
+            }).then(() => {
+                res.status(200).send('Post deleted');
+            }).catch(() => {
+                res.status(401).send('Something went wrong. Please try again')
+            })
+        } else {
+            res.status(401).send('You must be logged in to delete a post');
         }
-    }).then(() => {
-        res.status(204).send('deleted')
     })
 })
 
 //edit post *
 router.put('/:id', (req, res, next) => {
     const id = parseInt(req.params.id);
-    if(!id || id < 0){
+    const token = req.cookies.jwt;
+    if (!id || id < 0) {
         res.status(400).send()
     }
-    Post.update({
-        postTitle: req.body.postTitle,
-        postBody: req.body.postBody
-    }, {
-        where: {
-            id: id
+    authService.verifyUser(token).then(user => {
+        if (user){
+            Post.update({
+                postTitle: req.body.postTitle,
+                postBody: req.body.postBody
+            }, {
+                where: {
+                    id: id
+                }
+            }).then(() => {
+                res.status(204).send()
+            }).catch(() => {
+                res.status(400).send()
+            })
+        } else{
+            res.status(401).send('You must be logged in')
         }
-    }).then(() => {
-        res.status(204).send()
-    }).catch(() => {
-        res.status(400).send()
     })
 })
 
 //route to GET users for user list *
 router.get('/users', (req, res, next) => {
     User.findAll().then(userList => {
-      res.json(userList)
+        res.json(userList)
     })
-  })
-  module.exports = router;
+})
+module.exports = router;
