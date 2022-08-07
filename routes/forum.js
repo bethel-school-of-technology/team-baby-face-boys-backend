@@ -3,10 +3,15 @@ var router = express.Router();
 const { User, Post } = require('../models');
 var authService = require('../services/auth')
 
-// GET all posts. *
+// GET all posts and users *
 router.get('/', (req, res, next) => {
     Post.findAll().then(postList => {
-        res.json(postList)
+        User.findAll().then(userList => {
+            res.json({
+                userList,
+                postList
+            })
+        })
     })
 })
 
@@ -101,10 +106,4 @@ router.put('/:id', (req, res, next) => {
     })
 })
 
-//route to GET users for user list *
-router.get('/users', (req, res, next) => {
-    User.findAll().then(userList => {
-        res.json(userList)
-    })
-})
 module.exports = router;
