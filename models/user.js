@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Post, {
         foreignKey: 'id'
       })
+      this.hasMany(models.HighScore, {
+        foreignKey: 'id'
+      })
     }
   };
   User.init({
