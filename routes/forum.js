@@ -5,13 +5,16 @@ var authService = require('../services/auth')
 
 // GET all posts and users *
 router.get('/', (req, res, next) => {
-    Post.findAll().then(postList => {
-        User.findAll().then(userList => {
-            res.json({
-                userList,
-                postList
+    const token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        Post.findAll().then(postList => {
+            User.findAll().then(userList => {
+                res.json({
+                    userList,
+                    postList
+                })
             })
-        })
+        })  
     })
 })
 
@@ -66,7 +69,7 @@ router.delete('/:id', (req, res, next) => {
         if (user) {
             Post.destroy({
                 where: {
-                    id: id
+                    UserId: id
                 }
             }).then(() => {
                 res.status(200).send('Post deleted');
@@ -93,10 +96,10 @@ router.put('/:id', (req, res, next) => {
                 postBody: req.body.postBody
             }, {
                 where: {
-                    id: id
+                    UserId: id
                 }
-            }).then(() => {
-                res.status(204).send()
+            }).then(post => {
+                res.json(post)
             }).catch(() => {
                 res.status(400).send()
             })
