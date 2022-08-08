@@ -96,7 +96,7 @@ router.put('/:id', (req, res, next) => {
                 postBody: req.body.postBody
             }, {
                 where: {
-                    UserId: id
+                    id: id
                 }
             }).then(post => {
                 res.json(post)
