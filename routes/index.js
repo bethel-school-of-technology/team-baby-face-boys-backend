@@ -4,16 +4,16 @@ const { User } = require('../models');
 var authService = require('../services/auth')
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' });
+// });
 
 //route for getting all users
-router.get('/users', (req, res, next) => {
-  User.findAll().then(userList => {
-    res.json(userList)
-  })
-})
+// router.get('/users', (req, res, next) => {
+//   User.findAll().then(userList => {
+//     res.json(userList)
+//   })
+// })
 
 //Route for creating an account
 router.post('/createaccount', (req, res, next) => {

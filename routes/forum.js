@@ -5,13 +5,16 @@ var authService = require('../services/auth')
 
 // GET all posts and users *
 router.get('/', (req, res, next) => {
-    Post.findAll().then(postList => {
-        User.findAll().then(userList => {
-            res.json({
-                userList,
-                postList
+    const token = req.cookies.jwt;
+    authService.verifyUser(token).then(user => {
+        Post.findAll().then(postList => {
+            User.findAll().then(userList => {
+                res.json({
+                    userList,
+                    postList
+                })
             })
-        })
+        })  
     })
 })
 
@@ -95,8 +98,8 @@ router.put('/:id', (req, res, next) => {
                 where: {
                     id: id
                 }
-            }).then(() => {
-                res.status(204).send()
+            }).then(post => {
+                res.json(post)
             }).catch(() => {
                 res.status(400).send()
             })
