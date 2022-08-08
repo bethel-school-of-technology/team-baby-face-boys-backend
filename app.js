@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var forumRouter = require('./routes/forum');
 var profileRouter = require('./routes/profile');
+var leaderboardRouter = require('./routes/leaderboard')
 
 var app = express();
 
@@ -27,5 +28,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/forum', forumRouter);
 app.use('/profile', profileRouter);
+app.use('/leaderboard', leaderboardRouter);
+
 
 module.exports = app;
