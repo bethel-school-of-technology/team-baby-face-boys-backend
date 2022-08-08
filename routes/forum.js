@@ -69,7 +69,7 @@ router.delete('/:id', (req, res, next) => {
         if (user) {
             Post.destroy({
                 where: {
-                    UserId: id
+                    id: id
                 }
             }).then(() => {
                 res.status(200).send('Post deleted');
