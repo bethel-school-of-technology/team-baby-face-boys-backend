@@ -7,14 +7,18 @@ var authService = require('../services/auth')
 router.get('/', (req, res, next) => {
     const token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
-        Post.findAll().then(postList => {
-            User.findAll().then(userList => {
-                res.json({
-                    userList,
-                    postList
+        if (user){
+            Post.findAll().then(postList => {
+                User.findAll().then(userList => {
+                    res.json({
+                        userList,
+                        postList
+                    })
                 })
-            })
-        })  
+            })  
+        } else {
+            res.status(403).send('You must be logged in to see the forum')
+        }
     })
 })
 
@@ -42,7 +46,7 @@ router.post('/', async (req, res, next) => {
 
     const user = await authService.verifyUser(token);
     if (!user) {
-        res.status(403).send();
+        res.status(403).send('You must be logged in to make a post')
         return
     }
 
