@@ -40,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
-    admin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
+    // admin: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false
+    // }
   }, {
     sequelize,
     modelName: 'User',

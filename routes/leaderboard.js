@@ -6,11 +6,18 @@ var authService = require('../services/auth');
 router.get('/', (req, res, next) => {
     const token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
-        HighScore.findAll().then(scores => {
-            res.json(scores)
-        })
+        if(user){
+            HighScore.findAll({
+                order: [
+                    ['WhackAMole', 'Desc']
+                ]
+            })
+        } else {
+            res.status(401).send('You must be logged in to see highscores')
+        }
+    }).then(scores => {
+        res.json(scores)
     })
 })
-
 
 module.exports = router;
