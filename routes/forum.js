@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const { User, Post } = require('../models');
-var authService = require('../services/auth')
+var authService = require('../services/auth');
 
 // GET all posts and users *
 router.get('/', (req, res, next) => {
     const token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
-        if (user){
+        if (user) {
             Post.findAll().then(postList => {
                 User.findAll().then(userList => {
                     res.json({
@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
                         postList
                     })
                 })
-            })  
+            })
         } else {
             res.status(403).send('You must be logged in to see the forum')
         }
@@ -70,18 +70,31 @@ router.delete('/:id', (req, res, next) => {
     const id = req.params.id;
     const token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
+
+        /*
+         // deleting user\
+        if (user.id == id || user.admin) {
+            User.destroy(...)
+        }
+         */
+
         if (user) {
-            Post.destroy({
+            Post.findOne({
                 where: {
-                    id: id
+                    id: id,
                 }
-            }).then(() => {
-                res.status(200).send('Post deleted');
+            }).then(post => {
+                if (post.UserId == user.id || user.admin) {
+                    post.destroy()
+                    res.status(200).send('Post deleted');
+                } else {
+                    res.status(403).send("You don't have permission to delete a post");
+                }
             }).catch(() => {
                 res.status(401).send('Something went wrong. Please try again')
             })
         } else {
-            res.status(401).send('You must be logged in to delete a post');
+            res.status(403).send('You must be logged in to delete a post');
         }
     })
 })
@@ -94,21 +107,29 @@ router.put('/:id', (req, res, next) => {
         res.status(400).send()
     }
     authService.verifyUser(token).then(user => {
-        if (user){
-            Post.update({
-                postTitle: req.body.postTitle,
-                postBody: req.body.postBody
-            }, {
+        if(user){
+            Post.findOne({
                 where: {
                     id: id
                 }
             }).then(post => {
-                res.json(post)
+                if(post.UserId == user.id || user.admin){
+                    post.update({
+                        postTitle: req.body.postTitle,
+                        postBody: req.body.postBody
+                    }), {
+                        where: {
+                            UserId: user.id
+                        }
+                    }
+                } else {
+                    res.status(403).send(`You cannot edit other user's posts.`)
+                }
             }).catch(() => {
-                res.status(400).send()
+                res.status(401).send('Something went wrong. Please try again.')
             })
-        } else{
-            res.status(401).send('You must be logged in')
+        } else {
+            res.status(403).send('You must be logged in to edit a post')
         }
     })
 })
