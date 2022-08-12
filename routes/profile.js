@@ -4,8 +4,8 @@ const { User, Post } = require('../models');
 var authService = require('../services/auth')
 
 //GET user secure routing. returns profile and most recent post*
-router.get('/', (req, res, next) => {
-    let token = req.cookies.jwt;
+router.get('/:jwt', (req, res, next) => {
+    let token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
             Post.findOne({
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
 
 
 //POST to post to forum
-router.post('/', async (req,res,next) => {
+router.post('/:jwt', async (req,res,next) => {
     let token = req.cookies.jwt
 
     const user = await authService.verifyUser(token);
@@ -58,7 +58,7 @@ router.post('/', async (req,res,next) => {
 
 
 //PUT for latest post *
-router.put('/', (req, res, next) => {
+router.put('/:jwt', (req, res, next) => {
     let token = req.cookies.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
