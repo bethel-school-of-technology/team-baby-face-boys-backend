@@ -35,19 +35,19 @@ router.post('/createaccount', (req, res, next) => {
 })
 
 //route for logging in
-router.post('/login', async (req,res,next) => {
+router.post('/login', async (req, res, next) => {
   User.findOne({
     where: {
       gamerID: req.body.gamerID
     }
   }).then(user => {
-    if(!user){
+    if (!user) {
       res.status(401).json({
         message: 'User not found'
       })
     } else {
       let passwordMatch = authService.comparePasswords(req.body.password, user.password);
-      if(passwordMatch){
+      if (passwordMatch) {
         let token = authService.signUser(user);
         res.cookie('jwt', token);
         res.send(token);
@@ -57,5 +57,11 @@ router.post('/login', async (req,res,next) => {
     }
   })
 })
+
+//Route for logging out
+router.get('/logout', function (req, res, next) {
+  res.cookie('jwt', "", { expires: new Date(0) });
+  res.send('Logged out');
+});
 
 module.exports = router;
