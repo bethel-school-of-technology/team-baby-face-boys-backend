@@ -106,32 +106,40 @@ router.put('/:id', (req, res, next) => {
     if (!id || id < 0) {
         res.status(400).send()
     }
+
     authService.verifyUser(token).then(user => {
         if(user){
-            Post.findOne({
-                where: {
-                    id: id
-                }
-            }).then(post => {
-                if(post.UserId == user.id || user.admin){
-                    post.update({
-                        postTitle: req.body.postTitle,
-                        postBody: req.body.postBody
-                    }), {
-                        where: {
-                            UserId: user.id
-                        }
-                    }
-                } else {
-                    res.status(403).send(`You cannot edit other user's posts.`)
-                }
-            }).catch(() => {
-                res.status(401).send('Something went wrong. Please try again.')
+            Post.update({
+                
             })
-        } else {
-            res.status(403).send('You must be logged in to edit a post')
         }
     })
+    // authService.verifyUser(token).then(user => {
+    //     if(user){
+    //         Post.findOne({
+    //             where: {
+    //                 id: id
+    //             }
+    //         }).then(post => {
+    //             if(post.UserId == user.id || user.admin){
+    //                 post.update({
+    //                     postTitle: req.body.postTitle,
+    //                     postBody: req.body.postBody
+    //                 }), {
+    //                     where: {
+    //                         UserId: user.id
+    //                     }
+    //                 }
+    //             } else {
+    //                 res.status(403).send(`You cannot edit other user's posts.`)
+    //             }
+    //         }).catch(() => {
+    //             res.status(401).send('Something went wrong. Please try again.')
+    //         })
+    //     } else {
+    //         res.status(403).send('You must be logged in to edit a post')
+    //     }
+    // })
 })
 
 module.exports = router;
