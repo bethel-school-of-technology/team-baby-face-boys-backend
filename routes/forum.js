@@ -4,8 +4,8 @@ const { User, Post } = require('../models');
 var authService = require('../services/auth');
 
 // GET all posts and users *
-router.get('/', (req, res, next) => {
-    const token = req.cookies.jwt;
+router.get('/:jwt', (req, res, next) => {
+    const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         if (user) {
             Post.findAll().then(postList => {
@@ -41,8 +41,8 @@ router.get('/', (req, res, next) => {
 // })
 
 //create a post *
-router.post('/', async (req, res, next) => {
-    let token = req.cookies.jwt
+router.post('/:jwt', async (req, res, next) => {
+    let token = req.params.jwt
 
     const user = await authService.verifyUser(token);
     if (!user) {
@@ -66,9 +66,9 @@ router.post('/', async (req, res, next) => {
 })
 
 //delete a post
-router.delete('/:id', (req, res, next) => {
-    const id = req.params.id;
-    const token = req.cookies.jwt;
+router.delete('/:jwt', (req, res, next) => {
+    const id = req.body.id;
+    const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
 
         /*
@@ -100,9 +100,9 @@ router.delete('/:id', (req, res, next) => {
 })
 
 //edit post *
-router.put('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    const token = req.cookies.jwt;
+router.put('/:jwt', (req, res, next) => {
+    const id = parseInt(req.body.id);
+    const token = req.params.jwt;
     if (!id || id < 0) {
         res.status(400).send()
     }
