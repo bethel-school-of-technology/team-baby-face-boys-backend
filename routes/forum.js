@@ -100,9 +100,9 @@ router.delete('/:id', (req, res, next) => {
 })
 
 //edit post *
-router.put('/:id', (req, res, next) => {
-    const id = parseInt(req.params.id);
-    const token = req.cookies.jwt;
+router.put('/:jwt', (req, res, next) => {
+    const id = parseInt(req.body.id);
+    const token = req.params.jwt;
     if (!id || id < 0) {
         res.status(400).send()
     }
@@ -110,8 +110,17 @@ router.put('/:id', (req, res, next) => {
     authService.verifyUser(token).then(user => {
         if(user){
             Post.update({
-                
+                postTitle: req.body.postTitle,
+                postBody: req.body.postBody
+            },{
+                where: {
+                    id: id
+                }
+            }).then(post => {
+                res.json(post).send()
             })
+        } else {
+            res.status(403).send('You must be logged in.')
         }
     })
     // authService.verifyUser(token).then(user => {
