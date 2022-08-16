@@ -32,7 +32,7 @@ router.get('/:jwt', (req, res, next) => {
 
 //POST to post to forum
 router.post('/:jwt', async (req,res,next) => {
-    let token = req.cookies.jwt
+    let token = req.params.jwt
 
     const user = await authService.verifyUser(token);
     if(!user){
@@ -59,7 +59,7 @@ router.post('/:jwt', async (req,res,next) => {
 
 //PUT for latest post *
 router.put('/:jwt', (req, res, next) => {
-    let token = req.cookies.jwt;
+    let token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
             Post.update(

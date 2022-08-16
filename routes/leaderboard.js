@@ -4,8 +4,8 @@ var router = express.Router();
 const { User, HighScore } = require('../models');
 var authService = require('../services/auth');
 
-router.get('/', (req, res, next) => {
-    const token = req.cookies.jwt;
+router.get('/:jwt', (req, res, next) => {
+    const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         if(user){
             HighScore.findAll().then(scores => {

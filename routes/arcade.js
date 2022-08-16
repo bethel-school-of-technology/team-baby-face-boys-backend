@@ -4,8 +4,8 @@ const { User } = require('../models');
 var authService = require('../services/auth');
 var moment = require('moment');
 
-router.get('/', (req, res, next) => {
-    const token = req.cookies.jwt;
+router.get('/:jwt', (req, res, next) => {
+    const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         User.findOne({
             where: {
