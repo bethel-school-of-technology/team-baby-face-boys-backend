@@ -17,11 +17,18 @@ router.get('/:jwt', (req, res, next) => {
                 ],
                 attributes: ['id','postBody', 'postTitle', 'createdAt', 'updatedAt', 'UserId']
             }).then(post => {
-                res.json({
-                    gamerID: user.gamerID,
-                    postTitle: post.postTitle,
-                    postBody: post.postBody
-                })
+                if(post) {
+                    res.json({
+                        gamerID: user.gamerID,
+                        postTitle: post.postTitle,
+                        postBody: post.postBody
+                    })
+                } else {
+                    res.json({
+                        gamerID: user.gamerID
+                    })
+                }
+                
             })
         } else {
             res.status(401).send('You most be logged in')
@@ -40,19 +47,25 @@ router.post('/:jwt', async (req,res,next) => {
         return
     }
 
+    console.log(req.body);
+
     //create post
     Post.create({
         postTitle: req.body.postTitle,
         postBody: req.body.postBody,
         UserId: user.id
     }).then(newPost => {
+        console.log('test2');
         res.json({
             postTitle: newPost.postTitle,
             postBody: newPost.postBody
-        })
-    }).catch(() => {
-        res.status(400)
+        });
+        return
+    }).catch((error) => {
+        console.log('test3');
+        res.json({error:error});
     })
+    console.log('test4');
 })
 
 
