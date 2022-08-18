@@ -60,14 +60,14 @@ router.post('/:jwt', async (req, res, next) => {
             postTitle: newPost.postTitle,
             postBody: newPost.postBody
         })
-    }).catch(() => {
-        res.status(400)
+    }).catch((error) => {
+        res.json({error}).status(400);
     })
 })
 
 //delete a post
-router.delete('/:jwt', (req, res, next) => {
-    const id = req.body.id;
+router.delete('/:jwt/:id', (req, res, next) => {
+    const id = req.params.id;
     const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
 
