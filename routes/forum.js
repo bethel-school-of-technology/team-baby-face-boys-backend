@@ -84,13 +84,14 @@ router.delete('/:jwt/:id', (req, res, next) => {
                     id: id,
                 }
             }).then(post => {
-                if (post.UserId == user.id || user.admin) {
+                if (post.UserId == user.id) {
                     post.destroy()
                     res.status(200).send('Post deleted');
                 } else {
                     res.status(403).send("You don't have permission to delete a post");
                 }
-            }).catch(() => {
+            }).catch((error) => { 
+                res.json({error:error});
                 res.status(401).send('Something went wrong. Please try again')
             })
         } else {
