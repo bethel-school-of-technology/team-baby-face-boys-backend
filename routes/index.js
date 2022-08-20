@@ -50,7 +50,7 @@ router.post('/login', async (req, res, next) => {
       if (passwordMatch) {
         let token = authService.signUser(user);
         res.cookie('jwt', token);
-        res.send(token);
+        res.send({token, user});
       } else {
         res.status(400).send('Invalid password');
       }
