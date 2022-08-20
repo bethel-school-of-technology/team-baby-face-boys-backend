@@ -8,7 +8,13 @@ router.get('/:jwt', (req, res, next) => {
     const token = req.params.jwt;
     authService.verifyUser(token).then(user => {
         if (user) {
-            Post.findAll().then(postList => {
+            Post.findAll({
+                include: [ User ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                attributes: ['id','postBody', 'postTitle', 'createdAt', 'updatedAt', 'UserId']
+            }).then(postList => {
                 User.findAll().then(userList => {
                     res.json({
                         userList,

@@ -55,17 +55,14 @@ router.post('/:jwt', async (req,res,next) => {
         postBody: req.body.postBody,
         UserId: user.id
     }).then(newPost => {
-        console.log('test2');
         res.json({
             postTitle: newPost.postTitle,
             postBody: newPost.postBody
         });
         return
     }).catch((error) => {
-        console.log('test3');
         res.json({error:error});
     })
-    console.log('test4');
 })
 
 
